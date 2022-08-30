@@ -6,6 +6,7 @@ import br.com.compass.mspayment.repository.InstallmentRepository;
 import br.com.compass.mspayment.repository.PaymentRepository;
 import br.com.compass.mspayment.resources.dto.InstallmentDto;
 import br.com.compass.mspayment.resources.dto.InstallmentFormDto;
+import io.quarkus.panache.common.Parameters;
 
 import javax.inject.Inject;
 import javax.transaction.Transactional;
@@ -13,6 +14,8 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Map;
+import java.util.Optional;
 
 @Path("/v1/installments")
 @Produces(MediaType.APPLICATION_JSON)
@@ -73,6 +76,13 @@ public class InstallmentResource {
         }
         installmentRepository.deleteById(id);
         return Response.noContent().build();
+    }
+
+    @GET
+    @Path("/order/{installmentId}")
+    public Installment getPayment(@PathParam("installmentId") Long installmentId){
+        Payment payment = paymentRepository.findById(installmentId);
+        return installmentRepository.findByPayment(payment).get();
     }
 
     private Boolean installmentValidation(InstallmentFormDto installmentFormDto, Payment payment) {

@@ -61,4 +61,10 @@ public class PaymentResource {
         paymentRepository.deleteById(id);
         return Response.noContent().build();
     }
+
+    @GET
+    @Path("/order/{paymentId}")
+    public Payment getPayment(@PathParam("paymentId") Long paymentId){
+        return paymentRepository.findById(paymentId);
+    }
 }
